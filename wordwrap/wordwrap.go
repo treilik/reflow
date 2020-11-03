@@ -23,14 +23,14 @@ type WordWrap struct {
 	Newline        []rune
 	KeepNewlines   bool
 	HardWrap       bool
-	TabReplace     string // since tabs can have differrent lenghts, replace them with this when hardwrap is enabled
+	TabReplace     string // since tabs can have differrent lengths, replace them with this when hardwrap is enabled
 	PreserveSpaces bool
 
 	buf   bytes.Buffer // processed and, in line, accepted bytes
 	space bytes.Buffer // pending continues spaces bytes
 	word  ansi.Buffer  // pending continues word bytes
 
-	lineLen int // the visible lenght of the line not accorat for tabs
+	lineLen int // the visible length of the line not accorat for tabs
 	ansi    bool
 
 	wroteBegin bool         // mark is since the last newline something has writen to the buffer (for ansi restart)
@@ -65,7 +65,7 @@ func String(s string, limit int) string {
 }
 
 // HardWrap is a shorthand for declaring a new hardwraping WordWrap instance,
-// since varibale lenght characters can not be hard wraped to a fixed lenght,
+// since varibale length characters can not be hard wraped to a fixed length,
 // tabs will be replaced by TabReplace, use according amount of spaces.
 func HardWrap(s string, limit int, tabReplace string) string {
 	f := NewWriter(limit)
@@ -77,24 +77,24 @@ func HardWrap(s string, limit int, tabReplace string) string {
 	return f.String()
 }
 
-// addes pending spaces to the buf(fer) ... and resets the space buffer
+// addes pending spaces to the buf(fer) and then resets the space buffer.
 func (w *WordWrap) addSpace() {
 	if w.space.Len() <= w.Limit-w.lineLen {
 		w.lineLen += w.space.Len()
 		w.buf.Write(w.space.Bytes())
 	} else {
-		lenght := w.space.Len()
+		length := w.space.Len()
 		first := w.Limit - w.lineLen
 		w.buf.WriteString(strings.Repeat(" ", first))
-		lenght -= first
-		for lenght >= w.Limit {
+		length -= first
+		for length >= w.Limit {
 			w.buf.WriteString("\n" + strings.Repeat(" ", w.Limit))
-			lenght -= w.Limit
+			length -= w.Limit
 		}
-		if lenght > 0 {
-			w.buf.WriteString("\n" + strings.Repeat(" ", lenght))
+		if length > 0 {
+			w.buf.WriteString("\n" + strings.Repeat(" ", length))
 		}
-		w.lineLen = lenght
+		w.lineLen = length
 	}
 	w.space.Reset()
 }
@@ -224,13 +224,13 @@ func (w *WordWrap) Close() error {
 }
 
 // Bytes returns the word-wrapped result as a byte slice.
-// Make sure to have closed the worwrapper, befor calling it
+// Make sure to have closed the worwrapper, befor calling it.
 func (w *WordWrap) Bytes() []byte {
 	return w.buf.Bytes()
 }
 
 // String returns the word-wrapped result as a string.
-// Make sure to have closed the worwrapper, befor calling it
+// Make sure to have closed the worwrapper, befor calling it.
 func (w *WordWrap) String() string {
 	return w.buf.String()
 }
