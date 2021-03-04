@@ -250,6 +250,24 @@ func TestHardWrap(t *testing.T) {
 			true,
 			"",
 		},
+		// check if befor zero gets reset and after gets remembered/repeated
+		{
+			"\x1b[34mblue\x1b[33;0;31mred\x1b[0m",
+			"\x1b[34mblue\x1b[33;0m\x1b[31mre\x1b[0m\n\x1b[31md\x1b[0m",
+			6,
+			true,
+			true,
+			"",
+		},
+		// check squash multiple zeros into one and ignore leading zeros
+		{
+			"\x1b[034mblue\x1b[33;00000000000000000000;000000000000031mred\x1b[0m",
+			"\x1b[34mblue\x1b[33;0m\x1b[31mre\x1b[0m\n\x1b[31md\x1b[0m",
+			6,
+			true,
+			true,
+			"",
+		},
 	}
 	for i, tc := range tt {
 		f := NewWriter(tc.Limit)
