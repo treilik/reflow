@@ -250,7 +250,7 @@ func TestHardWrap(t *testing.T) {
 			true,
 			"",
 		},
-		// check if befor zero gets reset and after gets remembered/repeated
+		// check if before zero gets reset and after gets remembered/repeated
 		{
 			"\x1b[34mblue\x1b[33;0;31mred\x1b[0m",
 			"\x1b[34mblue\x1b[33;0m\x1b[31mre\x1b[0m\n\x1b[31md\x1b[0m",
@@ -264,6 +264,15 @@ func TestHardWrap(t *testing.T) {
 			"\x1b[034mblue\x1b[33;00000000000000000000;000000000000031mred\x1b[0m",
 			"\x1b[34mblue\x1b[33;0m\x1b[31mre\x1b[0m\n\x1b[31md\x1b[0m",
 			6,
+			true,
+			true,
+			"",
+		},
+		// hyphens have also to be hardwrapped
+		{
+			"------------------------------------",
+			"----\n----\n----\n----\n----\n----\n----\n----\n----",
+			4,
 			true,
 			true,
 			"",

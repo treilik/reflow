@@ -231,7 +231,15 @@ func (w *WordWrap) Write(b []byte) (int, error) {
 			// valid breakpoint
 			w.addSpace()
 			w.addWord()
-			_, _ = w.buf.WriteRune(c)
+			_, _ = w.word.WriteRune(c)
+
+			// Wrap line if the breakpoint would exceed the Limit
+			if w.HardWrap && w.lineLen+w.space.Len()+runewidth.RuneWidth(c) > w.Limit {
+				w.addNewLine()
+			}
+
+			// treat breakpoint as single character length words
+			w.addWord()
 		} else if w.HardWrap && w.lineLen+w.word.PrintableRuneWidth()+runewidth.RuneWidth(c)+w.space.Len() == w.Limit {
 			// Word is at the limit -> begin new word
 			_, _ = w.word.WriteRune(c)
